@@ -1,0 +1,18 @@
+<div class="container">
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <td>文件</td>
+          <td>文件大小</td>
+        </tr>
+      </thead>
+      <tbody *ngIf="filesList?.length">
+        <tr *ngFor="let file of filesList">
+          <td><span><i class="{{ file.type === 0 ? 'fa fa-file' : 'fa fa-envelope'}}"></i></span>{{file.name}}</td>
+          <td>{{file.type === 0 ? (file.size | HumanSize) : '——'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
