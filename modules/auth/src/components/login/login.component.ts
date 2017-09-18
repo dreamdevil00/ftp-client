@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store'
 
-import * as auth from '../../../state/auth'
+import * as auth from '../../state'
 
 @Component({
   templateUrl: './login.component.html'
@@ -19,7 +19,7 @@ export class LoginComponent {
     private store: Store<any>,
   ) {
     this.store
-      .select('auth')
+      .select('app')
       .subscribe((res: any) => {
         if (res.development === true) {
           this.credentials.host = '10.132.184.93'
@@ -31,6 +31,7 @@ export class LoginComponent {
   }
 
   login() {
-    
+    this.store
+      .dispatch(new auth.AuthLoginAction(this.credentials))
   }
 }

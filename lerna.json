@@ -3,7 +3,7 @@
   "packages": [
     "packages/*",
     "modules/*",
-    "webapp/*"
+    "webapp"
   ],
   "version": "0.0.0"
 }

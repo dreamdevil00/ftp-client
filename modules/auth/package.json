@@ -1,0 +1,9 @@
+{
+  "name": "@dream/auth",
+  "version": "0.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@dream/ui": "0.0.0",
+    "@dream/ftp-sdk": "0.0.0"
+  }
+}

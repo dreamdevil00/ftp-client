@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store'
 
 import * as ftp from '../state/ftp'
 
-import { FtpService } from '../services/ftp.service'
+import { FtpService } from '@dream/ftp-sdk'
 
 @Component({
   selector: 'ftp-index',

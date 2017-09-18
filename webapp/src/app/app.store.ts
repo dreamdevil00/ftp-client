@@ -5,7 +5,7 @@ import { EffectsModule } from '@ngrx/effects'
 
 import * as app from './state/app'
 import * as ftp from './state/ftp'
-import * as auth from './modules/auth'
+import * as auth from '@dream/auth'
 
 export interface State {
   app: app.State,

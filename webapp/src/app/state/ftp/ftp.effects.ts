@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable'
 import { Action, Store } from '@ngrx/store'
 import { Effect, Actions } from '@ngrx/effects'
 
-import { FtpService } from '../../services/ftp.service'
+import { FtpService } from '@dream/ftp-sdk'
 
 import * as FtpActions from './ftp.actions'
 

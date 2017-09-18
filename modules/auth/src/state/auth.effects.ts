@@ -5,6 +5,7 @@ import { Action, Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 
 import * as auth from './auth.actions'
+import { AuthService } from '../auth.service'
 
 @Injectable()
 export class AuthEffects {
@@ -12,7 +13,21 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   login: Observable<Action> = this.actions$
     .ofType(auth.ActionTypes.AUTH_LOGIN)
-    .do(action => {
+    .do((action: auth.AuthLoginAction) => {
+      this.authService
+        .login(action.payload)
+        .subscribe(
+          (success) => {
+            console.log('success: ', success)
+            this.store
+              .dispatch(new auth.AuthLoginSuccessAction(success))
+          },
+          (error) => {
+            console.log('error: ', error)
+            this.store
+              .dispatch(new auth.AuthLoginErrorAction(error))
+          }
+        )
     })
 
   @Effect({ dispatch: false })
@@ -47,6 +62,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private store: Store<any>,
+    private authService: AuthService,
   ) {
   }
 
