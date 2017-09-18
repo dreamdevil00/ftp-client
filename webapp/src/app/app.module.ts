@@ -11,7 +11,8 @@ import { DreamUiModule } from './packages/ui'
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './components/not-found/not-found.component'
 
-import { AuthComponent } from './components/auth/auth.component'
+import { LoginComponent } from './components/auth/login/login.component'
+
 import { ButtonActionsComponent } from './components/button-actions/button-actions.component'
 import { FilesListComponent } from './components/files/files-list.component'
 import { IndexComponent } from './components/index.component'
@@ -33,10 +34,10 @@ const modules = [
 
 const components = [
   NotFoundComponent,
-  AuthComponent,
   ButtonActionsComponent,
   FilesListComponent,
   IndexComponent,
+  LoginComponent,
 ];
 
 const directives = [

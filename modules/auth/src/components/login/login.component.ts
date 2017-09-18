@@ -1,17 +1,12 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store'
 
-import * as ftp from '../../state/ftp.actions'
+import * as auth from '../../../state/auth'
 
 @Component({
-  selector: 'ftp-auth',
-  templateUrl: './auth.component.html'
+  templateUrl: './login.component.html'
 })
-export class AuthComponent {
-
-  @Output() action = new EventEmitter()
-
-  private settings: any
+export class LoginComponent {
 
   private credentials = {
     host: '',
@@ -24,10 +19,9 @@ export class AuthComponent {
     private store: Store<any>,
   ) {
     this.store
-      .select('app')
+      .select('auth')
       .subscribe((res: any) => {
-        this.settings = res.settings
-        if (this.settings.nodeEnv === 'development') {
+        if (res.development === true) {
           this.credentials.host = '10.132.184.93'
           this.credentials.port = 21
           this.credentials.username = 'demo'
@@ -36,7 +30,7 @@ export class AuthComponent {
       })
   }
 
-  handleAction(event) {
-    this.action.emit(event)
+  login() {
+    
   }
 }

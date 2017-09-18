@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 
 import { Store } from '@ngrx/store'
 
-import * as ftp from '../state/ftp.actions'
+import * as ftp from '../state/ftp'
 
 import { FtpService } from '../services/ftp.service'
 

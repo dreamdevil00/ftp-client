@@ -1,8 +1,0 @@
-<div>
-  主  机: <input [(ngModel)]="credentials.host">
-  端  口: <input [(ngModel)]="credentials.port">
-  用户名: <input [(ngModel)]="credentials.username">
-  密  码: <input [(ngModel)]="credentials.password">
-  <button (click)="handleAction({type: 'Connect', payload: credentials})">连接</button>
-  <button (click)="handleAction({type: 'Disconnect', payload: null})">断开连接</button>
-</div>
