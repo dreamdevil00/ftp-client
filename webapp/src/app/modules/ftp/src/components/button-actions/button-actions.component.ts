@@ -4,6 +4,8 @@ import { Component, Output, EventEmitter } from '@angular/core'
 @Component({
   selector: 'ftp-button-actions',
   templateUrl: './button-actions.component.html',
+  styles: [`
+  `]
 })
 export class ButtonActionsComponent {
 
