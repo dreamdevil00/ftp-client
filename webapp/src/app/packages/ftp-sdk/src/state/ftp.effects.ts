@@ -71,7 +71,6 @@ export class FtpEffects {
   readDirSuccess: Observable<Action> = this.actions$
     .ofType(FtpActions.ActionTypes.FTP_READDIR_SUCCESS)
     .do((action: FtpActions.FtpReadDirSuccessAction) => {
-      this.ftpService.filesList = action.payload
       console.log('readdir success:')
       console.dir(action.payload)
     })

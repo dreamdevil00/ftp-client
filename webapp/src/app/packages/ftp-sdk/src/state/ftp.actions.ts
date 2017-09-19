@@ -48,6 +48,7 @@ export class FtpConnectSuccessAction implements Action {
 /** Ftp Disconnect */
 export class FtpDisconnectAction implements Action {
   type = ActionTypes.FTP_DISCONNECT
+  constructor(public payload: any) { }
 }
 
 export class FtpDisconnectErrorAction implements Action {

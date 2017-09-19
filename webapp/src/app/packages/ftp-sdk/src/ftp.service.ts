@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core'
 import * as JSFtp from 'jsftp'
 import { Observable } from 'rxjs/Rx'
+import { Subscription } from 'rxjs/Rx'
+import { Store } from '@ngrx/store'
 
 @Injectable()
 export class FtpService {
@@ -8,10 +10,8 @@ export class FtpService {
   private ftp
   public connected: boolean
 
-  public filesList: any[]
-  public currentDir: string = '.'
-
   constructor(
+    private store: Store<any>,
   ) { 
     this.ftp = null
     this.connected = false
@@ -27,24 +27,12 @@ export class FtpService {
           user: credentials.username,
           pass: credentials.password,
         })
-
-        let _cb = cb
-        cb = function(err, data) {
-          if (err) {
-            return _cb(err)
-          }
-          self.connected = true
-          _cb(err, data)
-        }
-        self.ftp.auth(credentials.username, credentials.password, cb)
-      } else {
-        cb(null, null)
       }
-      
+      cb(null, self.ftp)   
     }
 
-    let auth = Observable.bindNodeCallback(_connect)
-     return auth(credentials)
+    let connectAsObservable = Observable.bindNodeCallback(_connect)
+    return connectAsObservable(credentials)
   }
 
   disconnect(): Observable<any> {
@@ -55,8 +43,6 @@ export class FtpService {
         self.ftp.destroy()
         self.ftp = null
         self.connected = false
-        self.filesList = []
-        self.currentDir = '.'
       } catch(error) {
         err = error
       }
@@ -75,5 +61,15 @@ export class FtpService {
 
     let lsAsObservable = Observable.bindNodeCallback(_ls)
     return lsAsObservable(directory)
+  }
+
+  getCurDirFilesList(successCb, errorCb): Subscription {
+    return this.store
+      .select('ftp')
+      .subscribe((res) => {
+        let curDir = res.currentDir
+        this.readdir(curDir)
+          .subscribe(successCb, errorCb)
+      })
   }
 }
