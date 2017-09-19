@@ -12,14 +12,10 @@ import { AppComponent } from './app.component';
 import { NotFoundComponent } from './components/not-found/not-found.component'
 import { RouterComponent } from './components/router/router.component'
 
-import { ButtonActionsComponent } from './components/button-actions/button-actions.component'
-import { FilesListComponent } from './components/files/files-list.component'
-import { IndexComponent } from './components/index.component'
-
+import { FtpModule } from './modules/ftp'
 import { FtpSDKModule } from './packages/ftp-sdk'
 
-import { HumanSizePipe } from './pipes/human-size.pipe'
-import { LocalTimePipe } from './pipes/local-time.pipe'
+import { PipesModule } from './packages/pipes'
 
 
 const modules = [
@@ -28,21 +24,18 @@ const modules = [
   AppRoutingModule,
   DreamLayoutModule,
   DreamUiModule,
+  PipesModule,
+  FtpModule,
   AppStoreModule,
   FtpSDKModule.forRoot(),
 ]
 
 const components = [
   NotFoundComponent,
-  ButtonActionsComponent,
-  FilesListComponent,
-  IndexComponent,
   RouterComponent,
 ];
 
 const directives = [
-  HumanSizePipe,
-  LocalTimePipe,
 ]
 
 @NgModule({
