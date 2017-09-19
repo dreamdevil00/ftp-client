@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import { Observable } from 'rxjs/Rx'
-import { FtpService } from '@dream/ftp-sdk'
+import { FtpService } from '../../../packages/ftp-sdk'
 
 @Injectable()
 export class AuthService {

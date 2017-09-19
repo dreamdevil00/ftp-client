@@ -3,6 +3,8 @@ import { Store } from '@ngrx/store'
 
 import * as auth from '../../state'
 
+import * as ftp from '../../../../../packages/ftp-sdk'
+
 @Component({
   templateUrl: './login.component.html'
 })
@@ -31,7 +33,13 @@ export class LoginComponent {
   }
 
   login() {
+    /*
     this.store
-      .dispatch(new auth.AuthLoginAction(this.credentials))
+      .dispatch(new auth.AuthLoginAction(this.credentials)) */
+    /*
+    this.store
+      .dispatch(new ftp.FtpConnectAction(this.credentials)) */
+    this.store
+      .dispatch(new auth.AuthLoginSuccessAction({}))
   }
 }

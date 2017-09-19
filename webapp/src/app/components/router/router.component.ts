@@ -15,7 +15,7 @@ export class RouterComponent implements OnInit {
       .select('auth')
       .subscribe((res: any) => {
         return this.store
-          .dispatch({type: 'APP_REDIRECT_LOGIN' })
+          .dispatch({type: res.loggedIn ? 'APP_REDIRECT_INDEX' : 'APP_REDIRECT_LOGIN' })
       })
   }
 }

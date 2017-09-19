@@ -24,6 +24,9 @@
       ],
       "rxjs/*": [
         "node_modules/rxjs/*"
+      ],
+      "jsftp": [
+        "node_modules/jsftp"
       ]
     },
     "typeRoots": [

@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core'
 
 import { Store } from '@ngrx/store'
 
-import * as ftp from '../state/ftp'
-
-import { FtpService } from '@dream/ftp-sdk'
+import * as ftp from '../packages/ftp-sdk'
 
 @Component({
   selector: 'ftp-index',
@@ -15,7 +13,7 @@ export class IndexComponent implements OnInit {
   private filesList: any[]
 
   constructor(
-    private ftpService: FtpService,
+    private ftpService: ftp.FtpService,
     private store: Store<any>,
   ) {
   }

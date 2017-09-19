@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 
-import { DreamUiModule } from '@dream/ui'
+import { DreamUiModule } from '../../../packages/ui'
 import { AuthRoutingModule } from './auth-routing.module'
 
 import { LoginComponent } from './components/login/login.component'

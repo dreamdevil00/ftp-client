@@ -3,9 +3,9 @@ import { StoreModule } from '@ngrx/store'
 import { Action, ActionReducerMap } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 
-import * as app from './state/app'
-import * as ftp from './state/ftp'
-import * as auth from '@dream/auth'
+import * as app from './state'
+import * as ftp from './packages/ftp-sdk'
+import * as auth from './modules/auth'
 
 export interface State {
   app: app.State,
@@ -27,6 +27,9 @@ const reducers: ActionReducerMap<State> = {
       auth.AuthEffects,
       ftp.FtpEffects,
     ])
+  ],
+  providers: [
+    auth.AuthService,
   ]
 })
 export class AppStoreModule {}

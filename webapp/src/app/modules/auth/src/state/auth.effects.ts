@@ -18,7 +18,6 @@ export class AuthEffects {
         .login(action.payload)
         .subscribe(
           (success) => {
-            console.log('success: ', success)
             this.store
               .dispatch(new auth.AuthLoginSuccessAction(success))
           },
@@ -39,6 +38,8 @@ export class AuthEffects {
   loginSuccess: Observable<Action> = this.actions$
     .ofType(auth.ActionTypes.AUTH_LOGIN_SUCCESS)
     .do((action) => {
+      return this.store
+        .dispatch({ type: 'APP_REDIRECT_ROUTER'})
     })
 
   @Effect({ dispatch: false })

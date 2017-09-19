@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable'
 import { Action, Store } from '@ngrx/store'
 import { Effect, Actions } from '@ngrx/effects'
 
-import { FtpService } from '@dream/ftp-sdk'
+import { FtpService } from '../ftp.service'
 
 import * as FtpActions from './ftp.actions'
 
@@ -15,7 +15,6 @@ export class FtpEffects {
   connect: Observable<Action> = this.actions$
     .ofType(FtpActions.ActionTypes.FTP_CONNECT)
     .do((action: FtpActions.FtpConnectAction) => {
-      console.log('in connect effect')
       this.ftpService
         .connect(action.payload)
         .subscribe(
