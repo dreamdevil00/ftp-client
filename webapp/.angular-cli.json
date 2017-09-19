@@ -22,7 +22,7 @@
       "styles": [
         "scss/style.scss",
         "assets/css/font-awesome.min.css",
-        "assets/simple-line-icons.css"
+        "assets/css/simple-line-icons.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
