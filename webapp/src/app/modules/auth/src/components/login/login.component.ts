@@ -33,13 +33,7 @@ export class LoginComponent {
   }
 
   login() {
-    /*
     this.store
-      .dispatch(new auth.AuthLoginAction(this.credentials)) */
-    /*
-    this.store
-      .dispatch(new ftp.FtpConnectAction(this.credentials)) */
-    this.store
-      .dispatch(new auth.AuthLoginSuccessAction({}))
+      .dispatch(new auth.AuthLoginAction(this.credentials))
   }
 }

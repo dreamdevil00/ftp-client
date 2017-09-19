@@ -16,7 +16,7 @@ export function reducer(state = initialState, action: Action): State {
       return Object.assign({}, state)
 
     case 'AUTH_LOGIN_SUCCESS':
-      return Object.assign({}, state, {currentUser: action.payload, loggedIn: true})
+      return Object.assign({}, state, { loggedIn: true})
     default:
       return state
   }

@@ -5,6 +5,7 @@ import { Action, Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 
 import * as auth from './auth.actions'
+import * as ftp from '../../../../packages/ftp-sdk'
 import { AuthService } from '../auth.service'
 
 @Injectable()
@@ -14,19 +15,14 @@ export class AuthEffects {
   login: Observable<Action> = this.actions$
     .ofType(auth.ActionTypes.AUTH_LOGIN)
     .do((action: auth.AuthLoginAction) => {
-      this.authService
-        .login(action.payload)
+      return this.ftpService
+        .connect(action.payload)
         .subscribe(
           (success) => {
-            this.store
+            console.log('login success:', success)
+            return this.store
               .dispatch(new auth.AuthLoginSuccessAction(success))
-          },
-          (error) => {
-            console.log('error: ', error)
-            this.store
-              .dispatch(new auth.AuthLoginErrorAction(error))
-          }
-        )
+          })
     })
 
   @Effect({ dispatch: false })
@@ -64,6 +60,7 @@ export class AuthEffects {
     private actions$: Actions,
     private store: Store<any>,
     private authService: AuthService,
+    private ftpService: ftp.FtpService,
   ) {
   }
 
