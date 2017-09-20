@@ -85,7 +85,7 @@ module.exports = {
       "./src\\polyfills.ts"
     ],
     "styles": [
-      "./src\\styles.scss"
+      "./src\\scss\\style.scss"
     ]
   },
   "output": {
@@ -117,7 +117,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.css$/,
         "use": [
@@ -140,7 +140,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.scss$|\.sass$/,
         "use": [
@@ -171,7 +171,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.less$/,
         "use": [
@@ -201,7 +201,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.styl$/,
         "use": [
@@ -231,7 +231,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.css$/,
         "use": [
@@ -254,7 +254,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.scss$|\.sass$/,
         "use": [
@@ -285,7 +285,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.less$/,
         "use": [
@@ -315,7 +315,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\scss\\style.scss")
         ],
         "test": /\.styl$/,
         "use": [
@@ -353,7 +353,7 @@ module.exports = {
     new NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([
       {
-        "context": "E:\\work\\development\\ftp-webapp\\webapp\\src/",
+        "context": "E:\\work\\development\\ftp-webapp\\src/",
         "to": "",
         "from": {
           "glob": "assets/**/*",
@@ -361,7 +361,7 @@ module.exports = {
         }
       },
       {
-        "context": "E:\\work\\development\\ftp-webapp\\webapp\\src/",
+        "context": "E:\\work\\development\\ftp-webapp\\src/",
         "to": "",
         "from": {
           "glob": "favicon.ico",
