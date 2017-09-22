@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store'
 import { Subscription } from 'rxjs/Rx'
 
 import * as ftp from '../../../../packages/ftp-sdk'
+import { UiService } from '../../../../packages/ui'
 
 import { remote } from 'electron'
 
@@ -24,6 +25,7 @@ export class IndexComponent implements OnInit, OnDestroy {
     private ftpService: ftp.FtpService,
     private _ngZone: NgZone,
     private store: Store<any>,
+    private ui: UiService,
   ) {
     this.subscriptions = []
     this.rowData = []
@@ -69,6 +71,13 @@ export class IndexComponent implements OnInit, OnDestroy {
     })
   }
 
+  private _normalizePath(path: string) {
+    if(path.substring(-1) !== '/') {
+      path += '/'
+    }
+    return path
+  }
+
   selectFolder() {
     dialog.showOpenDialog({
       title: '选择文件夹',
@@ -84,9 +93,14 @@ export class IndexComponent implements OnInit, OnDestroy {
   }
 
   createFolder() {
-    const path = '/result'
-    this.store.dispatch(new ftp.FtpCreateDirAction(path))
-    this.refresh()
+    const successCb = (res) => {
+      const path = this._normalizePath(this.currentDir) + res
+      console.log(res)
+      console.log(path)
+      this.store.dispatch(new ftp.FtpCreateDirAction(path))
+      this.refresh()
+    }
+    this.ui.alertInput({ title: '请输入目录名'}, successCb, () => {})
   }
 
   remove() {
