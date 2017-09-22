@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="col-lg-6 offset-lg-3">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <td>文件</td>
+          <td>文件大小</td>
+        </tr>
+      </thead>
+      <tbody *ngIf="rowData.length">
+        <tr *ngFor="let row of rowData">
+          <td>
+            <span>
+              <i class="{{row.type === 0  ? 'icon-doc' : 'icon-folder'}}">{{row.name}}</i>
+            </span>
+          </td>
+          <td>{{row.type === 0 ? (row.size | HumanSize) : '————'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

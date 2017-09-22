@@ -5,21 +5,31 @@ import { FormsModule } from '@angular/forms'
 import { PipesModule } from '../../../packages/pipes'
 
 import { ButtonActionsComponent } from './components/button-actions/button-actions.component'
-import { FilesListComponent } from './components/files/files-list.component'
+
+import { ContentWindowComponent } from './components/content-window/content-window.component'
+
 import { IndexComponent } from './components/index.component'
+
+import { IntoDirDirective } from './directives/fileAction.directive'
 
 const components = [
   ButtonActionsComponent,
-  FilesListComponent,
   IndexComponent,
+  ContentWindowComponent,
+]
+
+const directives = [
+  IntoDirDirective,
 ]
 
 @NgModule({
   declarations: [
     ...components,
+    ...directives,
   ],
   exports: [
     ...components,
+    ...directives,
   ],
   imports: [
     CommonModule,
