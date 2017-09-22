@@ -1,10 +1,5 @@
 {
   "name": "@dream/ui",
   "version": "0.0.0",
-  "license": "MIT",
-  "dependencies": {
-    "coreui-styles": "^1.0.2",
-    "font-awesome": "^4.7.0",
-    "simple-line-icons": "^2.4.1"
-  }
+  "license": "MIT"
 }
