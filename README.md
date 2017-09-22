@@ -1,5 +1,6 @@
 #### Description
 
-A simple ftp client built with electron angular4 
+This is a simple ftp client built with electron angular4 
 
-Attention: This project is under development
+#### Warning:
+This project is still in development
