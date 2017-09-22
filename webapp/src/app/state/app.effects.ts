@@ -16,8 +16,6 @@ export class AppEffects {
     .ofType(app.ActionTypes.APP_REDIRECT_INDEX)
     .do(() => {
       this.router.navigate(['/' ,'main'])
-      this.store
-        .dispatch(new ftp.FtpReadDirAction('.'))
     })
 
   @Effect({ dispatch: false })

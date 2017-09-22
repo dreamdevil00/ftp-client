@@ -19,8 +19,9 @@ export class AuthEffects {
         .connect(action.payload)
         .subscribe(
           (success) => {
-            console.log('login success:', success)
-            return this.store
+            this.store
+              .dispatch(new ftp.FtpReadDirAction('.'))
+            this.store
               .dispatch(new auth.AuthLoginSuccessAction(success))
           })
     })
