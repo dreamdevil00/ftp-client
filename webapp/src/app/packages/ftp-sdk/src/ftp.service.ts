@@ -72,4 +72,40 @@ export class FtpService {
           .subscribe(successCb, errorCb)
       })
   }
+
+  /**
+   * 
+   * Rename a file.
+   * from and to are both filepaths
+   * @param {string} from
+   * @param {string} to 
+   * @returns {Observable<any>} 
+   * @memberof FtpService
+   */
+  rename(from: string, to: string): Observable<any> {
+    const self = this
+    const _rename = function(from, to, cb) {
+      self.ftp.rename(from, to, cb)
+    }
+    const renameAsObservable = Observable.bindNodeCallback(_rename)
+    return renameAsObservable(from, to)
+  }
+
+  mkdir(directory: string): Observable<any> {
+    const self = this
+    const _mkdir = function(directory, cb) {
+      self.ftp.raw('mkd', directory, cb)
+    }
+
+    let mkdirAsObservable = Observable.bindNodeCallback(_mkdir)
+    return mkdirAsObservable(directory)
+  }
+
+  rmdir(directory: string): Observable<any> {
+    const _rmdir = (directory, cb) => {
+      this.ftp.raw('rmd', directory, cb)
+    }
+    let rmdirAsObservable = Observable.bindNodeCallback(_rmdir)
+    return rmdirAsObservable(directory)
+  }
 }

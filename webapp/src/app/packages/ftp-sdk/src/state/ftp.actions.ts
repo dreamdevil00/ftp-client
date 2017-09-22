@@ -76,13 +76,55 @@ export class FtpReadDirSuccessAction implements Action {
   type = ActionTypes.FTP_READDIR_SUCCESS
   constructor(public payload: any) {}
 }
+
+/** Ftp Create Dir */
+export class FtpCreateDirAction implements Action {
+  type = ActionTypes.FTP_CREATEDIR
+  constructor(public payload: any) {}
+}
+
+export class FtpCreateDirErrorAction implements Action {
+  type = ActionTypes.FTP_CREATEDIR_ERROR
+  constructor(public payload: any) { }
+}
+
+export class FtpCreateDirSuccessAction implements Action {
+  type = ActionTypes.FTP_CREATEDIR_SUCCESS
+  constructor(public payload: any) { }
+}
+
+/** Ftp Remove Dir */
+export class FtpRemoveDirAction implements Action {
+  type = ActionTypes.FTP_REMOVEDIR
+  constructor(public payload: any) {}
+}
+
+export class FtpRemoveDirErrorAction implements Action {
+  type = ActionTypes.FTP_REMOVEDIR_ERROR
+  constructor(public payload: any) {}
+}
+
+export class FtpRemoveDirSuccessAction implements Action {
+  type = ActionTypes.FTP_REMOVEDIR_SUCCESS
+  constructor(public payload: any) { }
+}
 export type Actions
   = FtpConnectAction
   | FtpConnectErrorAction
+  | FtpConnectSuccessAction
+
   | FtpDisconnectAction
   | FtpDisconnectErrorAction
   | FtpDisconnectSuccessAction
-  | FtpConnectSuccessAction
+
   | FtpReadDirAction
   | FtpReadDirErrorAction
   | FtpReadDirSuccessAction
+
+  | FtpCreateDirAction
+  | FtpCreateDirErrorAction
+  | FtpCreateDirSuccessAction
+
+  | FtpRemoveDirAction
+  | FtpRemoveDirErrorAction
+  | FtpRemoveDirSuccessAction

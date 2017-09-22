@@ -71,9 +71,79 @@ export class FtpEffects {
   readDirSuccess: Observable<Action> = this.actions$
     .ofType(FtpActions.ActionTypes.FTP_READDIR_SUCCESS)
     .do((action: FtpActions.FtpReadDirSuccessAction) => {
-      console.log('readdir success:')
-      console.dir(action.payload)
     })
+
+  @Effect({dispatch: false})
+  createDir: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_CREATEDIR)
+    .do(
+      (action: FtpActions.FtpCreateDirAction) => {
+        this.ftpService
+          .mkdir(action.payload)
+          .subscribe(
+            (success) => {
+              this.store.dispatch(new FtpActions.FtpCreateDirSuccessAction(success))
+            },
+            (error) => {
+              this.store.dispatch(new FtpActions.FtpCreateDirErrorAction(error))
+            }
+          )
+      }
+    )
+
+  @Effect({dispatch: false})
+  createDirError: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_CREATEDIR_ERROR)
+    .do(
+      (action: FtpActions.FtpCreateDirErrorAction) => {
+        console.log('create dir failed ', action.payload)
+      }
+    )
+
+  @Effect({ dispatch: false })
+  createDirSuccess: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_CREATEDIR_SUCCESS)
+    .do(
+    (action: FtpActions.FtpCreateDirSuccessAction) => {
+    }
+    )
+
+  @Effect({dispatch: false})
+  removeDir: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEDIR)
+    .do(
+      (action: FtpActions.FtpRemoveDirAction) => {
+        this.ftpService
+          .rmdir(action.payload)
+          .subscribe(
+            (success) => {
+              this.store
+                .dispatch(new FtpActions.FtpRemoveDirSuccessAction(success))
+            },
+            (error) => {
+              this.store
+                .dispatch(new FtpActions.FtpRemoveDirErrorAction(error))
+            }
+          )
+      }
+    )
+
+  @Effect({dispatch: false})
+  removeDirError: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEDIR_ERROR)
+    .do(
+      (action: FtpActions.FtpRemoveDirErrorAction) => {
+        console.log('remove dir error: ', action.payload)
+      }
+    )
+
+  @Effect({ dispatch: false })
+  removeDirSuccess: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEDIR_SUCCESS)
+    .do(
+    (action: FtpActions.FtpRemoveDirSuccessAction) => {
+    }
+    )
 
   constructor(
     private actions$: Actions,

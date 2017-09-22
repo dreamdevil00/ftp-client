@@ -9,7 +9,7 @@ export interface State {
 
 const initialState: State = {
   settings: {nodeEnv: 'development'},
-  currentDir: '.',
+  currentDir: '/',
   filesList: [],
   loggedIn: false,
 }
