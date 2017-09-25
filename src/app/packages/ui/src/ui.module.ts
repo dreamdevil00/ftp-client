@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+//import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 
 import { UiLogoComponent } from './components/logo/logo.component'
 import { UiMessageComponent } from './components/message/message.component'
@@ -16,7 +16,7 @@ const components = [
 const modules = [
   CommonModule,
   FormsModule,
-  NgbModule.forRoot(),
+//  NgbModule.forRoot(),
 ]
 
 const providers = [
