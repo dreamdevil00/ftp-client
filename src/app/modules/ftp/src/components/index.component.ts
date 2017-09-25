@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core'
+import { GridOptions } from 'ag-grid/main'
 
 import { Store } from '@ngrx/store'
 import { Subscription } from 'rxjs/Rx'
@@ -21,6 +22,11 @@ export class IndexComponent implements OnInit, OnDestroy {
   private rowData: any[]
   private subscriptions: Subscription[]
 
+  private selectedFiles: any[]
+  private columnDefs
+
+  private gridOptions: GridOptions
+
   constructor(
     private ftpService: ftp.FtpService,
     private _ngZone: NgZone,
@@ -30,6 +36,19 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.subscriptions = []
     this.rowData = []
     this.currentDir = '/'
+
+    this.gridOptions = <GridOptions>{}
+
+    this.selectedFiles = []
+
+    this.columnDefs = [
+      {
+        headerName: '#', width: 30, checkboxSelection: true, suppressSorting: true,
+        suppressMenu: true, pinned: true,
+      },
+      { headerName: '文件', field: 'name' },
+      { headerName: '大小', field: 'size' },
+    ]
   }
   
   ngOnInit() {
@@ -95,22 +114,38 @@ export class IndexComponent implements OnInit, OnDestroy {
   createFolder() {
     const successCb = (res) => {
       const path = this._normalizePath(this.currentDir) + res
-      console.log(res)
-      console.log(path)
-      this.store.dispatch(new ftp.FtpCreateDirAction(path))
-      this.refresh()
+      this.store.dispatch(new ftp.FtpCreateDirAction({
+        currentDir: this.currentDir,
+        path: path
+      }))
     }
     this.ui.alertInput({ title: '请输入目录名'}, successCb, () => {})
   }
 
-  remove() {
-    this.removeFolder()
-    this.refresh()
-  }
 
-  removeFolder() {
-    const path = '/result'
-    this.store.dispatch(new ftp.FtpRemoveDirAction(path))
+  remove() {
+    const _removeFolder = (path) => {
+      this.store.dispatch(new ftp.FtpRemoveDirAction({
+        currentDir: this.currentDir,
+        path: path
+      }))
+    }
+    const _removeFile = (path) => {
+      this.store.dispatch(new ftp.FtpRemoveFileAction({
+        currentDir: this.currentDir,
+        path: path
+      }))
+    }
+    const selectedRows = this.gridOptions.api.getSelectedRows()
+    if (selectedRows.length) {
+      const isFolder = selectedRows[0].type === 1
+      const filePath = this._normalizePath(this.currentDir) + selectedRows[0].name
+      if (isFolder) {
+        _removeFolder(filePath)
+      } else {
+        _removeFile(filePath)
+      }
+    }
   }
 
   handleAction(event) {

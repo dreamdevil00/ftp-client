@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core'
 import * as JSFtp from 'jsftp'
+import * as FtpRmr from 'jsftp-rmr'
 import { Observable } from 'rxjs/Rx'
 import { Subscription } from 'rxjs/Rx'
 import { Store } from '@ngrx/store'
+
+const Ftp = FtpRmr(JSFtp)
 
 @Injectable()
 export class FtpService {
@@ -21,7 +24,7 @@ export class FtpService {
     const self = this
     const _connect = function(credentials, cb) {
       if (!self.connected) {
-        self.ftp = new JSFtp({
+        self.ftp = new Ftp({
           host: credentials.host,
           port: credentials.port,
           user: credentials.username,
@@ -103,9 +106,17 @@ export class FtpService {
 
   rmdir(directory: string): Observable<any> {
     const _rmdir = (directory, cb) => {
-      this.ftp.raw('rmd', directory, cb)
+      this.ftp.rmr(directory, cb)
     }
     let rmdirAsObservable = Observable.bindNodeCallback(_rmdir)
     return rmdirAsObservable(directory)
+  }
+
+  rmfile(filePath: string): Observable<any> {
+    const _rmfile = (filePath, cb) => {
+      this.ftp.raw('dele', filePath, cb)
+    }
+    let rmfileAsObservable = Observable.bindNodeCallback(_rmfile)
+    return rmfileAsObservable(filePath)
   }
 }

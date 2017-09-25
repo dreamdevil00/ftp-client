@@ -20,6 +20,10 @@ export const ActionTypes = {
   FTP_REMOVEDIR:        'FTP_REMOVEDIR',
   FTP_REMOVEDIR_ERROR:  'FTP_REMOVEDIR_ERROR',
   FTP_REMOVEDIR_SUCCESS:'FTP_REMOVEDIR_SUCCESS',
+
+  FTP_REMOVEFILE:         'FTP_REMOVEFILE',
+  FTP_REMOVEFILE_ERROR:   'FTP_REMOVEFILE_ERROR',
+  FTP_REMOVEFILE_SUCCESS: 'FTP_REMOVEFILE_SUCCESS'
 }
 
 type credentials = {
@@ -108,6 +112,23 @@ export class FtpRemoveDirSuccessAction implements Action {
   type = ActionTypes.FTP_REMOVEDIR_SUCCESS
   constructor(public payload: any) { }
 }
+
+/** Ftp Remove File */
+export class FtpRemoveFileAction implements Action {
+  type = ActionTypes.FTP_REMOVEFILE
+  constructor(public payload: any) { }
+}
+
+export class FtpRemoveFileErrorAction implements Action {
+  type = ActionTypes.FTP_REMOVEFILE_ERROR
+  constructor(public payload: any) { }
+}
+
+export class FtpRemoveFileSuccessAction implements Action {
+  type = ActionTypes.FTP_REMOVEFILE_SUCCESS
+  constructor(public payload: any) { }
+}
+
 export type Actions
   = FtpConnectAction
   | FtpConnectErrorAction
@@ -128,3 +149,7 @@ export type Actions
   | FtpRemoveDirAction
   | FtpRemoveDirErrorAction
   | FtpRemoveDirSuccessAction
+
+  | FtpRemoveFileAction
+  | FtpRemoveFileErrorAction
+  | FtpRemoveFileSuccessAction

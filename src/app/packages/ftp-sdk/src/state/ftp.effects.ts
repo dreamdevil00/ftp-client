@@ -79,13 +79,19 @@ export class FtpEffects {
     .do(
       (action: FtpActions.FtpCreateDirAction) => {
         this.ftpService
-          .mkdir(action.payload)
+          .mkdir(action.payload.path)
           .subscribe(
             (success) => {
-              this.store.dispatch(new FtpActions.FtpCreateDirSuccessAction(success))
+              this.store.dispatch(new FtpActions.FtpCreateDirSuccessAction({
+                payload: action.payload,
+                result: success,
+              }))
             },
             (error) => {
-              this.store.dispatch(new FtpActions.FtpCreateDirErrorAction(error))
+              this.store.dispatch(new FtpActions.FtpCreateDirErrorAction({
+                payload: action.payload,
+                result: error,
+              }))
             }
           )
       }
@@ -105,6 +111,8 @@ export class FtpEffects {
     .ofType(FtpActions.ActionTypes.FTP_CREATEDIR_SUCCESS)
     .do(
     (action: FtpActions.FtpCreateDirSuccessAction) => {
+      let currentDir = action.payload.payload.currentDir
+      this.store.dispatch(new FtpActions.FtpReadDirAction(currentDir))
     }
     )
 
@@ -114,15 +122,21 @@ export class FtpEffects {
     .do(
       (action: FtpActions.FtpRemoveDirAction) => {
         this.ftpService
-          .rmdir(action.payload)
+          .rmdir(action.payload.path)
           .subscribe(
             (success) => {
               this.store
-                .dispatch(new FtpActions.FtpRemoveDirSuccessAction(success))
+                .dispatch(new FtpActions.FtpRemoveDirSuccessAction({
+                  payload: action.payload,
+                  result: success
+                }))
             },
             (error) => {
               this.store
-                .dispatch(new FtpActions.FtpRemoveDirErrorAction(error))
+                .dispatch(new FtpActions.FtpRemoveDirErrorAction({
+                  payload: action.payload,
+                  result: error
+                }))
             }
           )
       }
@@ -142,8 +156,57 @@ export class FtpEffects {
     .ofType(FtpActions.ActionTypes.FTP_REMOVEDIR_SUCCESS)
     .do(
     (action: FtpActions.FtpRemoveDirSuccessAction) => {
+      let currentDir = action.payload.payload.currentDir
+      this.store.dispatch(new FtpActions.FtpReadDirAction(currentDir))
     }
     )
+
+  @Effect({ dispatch: false })
+  removeFile: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEFILE)
+    .do(
+    (action: FtpActions.FtpRemoveFileAction) => {
+      this.ftpService
+        .rmfile(action.payload)
+        .subscribe(
+        (success) => {
+          this.store
+            .dispatch(new FtpActions.FtpRemoveFileSuccessAction({
+                  payload: action.payload,
+                  result: success
+                }))
+        },
+        (error) => {
+          this.store
+            .dispatch(new FtpActions.FtpRemoveFileErrorAction({
+                  payload: action.payload,
+                  result: error
+                }))
+        }
+        )
+    }
+    )
+
+  @Effect({ dispatch: false })
+  removeFileError: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEFILE_ERROR)
+    .do(
+    (action: FtpActions.FtpRemoveFileErrorAction) => {
+      console.log('remove dir error: ', action.payload)
+    }
+    )
+
+  @Effect({ dispatch: false })
+  removeFileSuccess: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_REMOVEFILE_SUCCESS)
+    .do(
+    (action: FtpActions.FtpRemoveFileSuccessAction) => {
+      let currentDir = action.payload.payload.currentDir
+      this.store.dispatch(new FtpActions.FtpReadDirAction(currentDir))
+    }
+    )
+
+  
 
   constructor(
     private actions$: Actions,
