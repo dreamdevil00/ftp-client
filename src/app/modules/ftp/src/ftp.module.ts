@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 
+import { AgGridModule } from 'ag-grid-angular/main'
+
 import { PipesModule } from '../../../packages/pipes'
 
 import { ButtonActionsComponent } from './components/button-actions/button-actions.component'
@@ -35,6 +37,7 @@ const directives = [
     CommonModule,
     FormsModule,
     PipesModule,
+    AgGridModule.withComponents([])
   ]
 })
 export class FtpModule {
