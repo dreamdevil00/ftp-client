@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core'
-import { GridOptions } from 'ag-grid/main'
 
 import { Store } from '@ngrx/store'
 import { Subscription } from 'rxjs/Rx'
+
+import * as path from 'path'
 
 import * as ftp from '../../../../packages/ftp-sdk'
 import { UiService } from '../../../../packages/ui'
@@ -22,10 +23,9 @@ export class IndexComponent implements OnInit, OnDestroy {
   private rowData: any[]
   private subscriptions: Subscription[]
 
-  private selectedFiles: any[]
-  private columnDefs
+  private selectedRow: any
 
-  private gridOptions: GridOptions
+  private queue
 
   constructor(
     private ftpService: ftp.FtpService,
@@ -36,19 +36,7 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.subscriptions = []
     this.rowData = []
     this.currentDir = '/'
-
-    this.gridOptions = <GridOptions>{}
-
-    this.selectedFiles = []
-
-    this.columnDefs = [
-      {
-        headerName: '#', width: 30, checkboxSelection: true, suppressSorting: true,
-        suppressMenu: true, pinned: true,
-      },
-      { headerName: '文件', field: 'name' },
-      { headerName: '大小', field: 'size' },
-    ]
+    this.selectedRow = null
   }
   
   ngOnInit() {
@@ -76,6 +64,41 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ftp.FtpReadDirAction(this.currentDir))
   }
 
+  private _normalizePath(path: string) {
+    if(path.substring(-1) !== '/') {
+      path += '/'
+    }
+    return path
+  }
+
+  private _slugifyPath(fullPath: string) {
+    fullPath = String(fullPath).replace(/\\/g, '/')
+    let newPath = ''
+    let spl = fullPath.split('/')
+    if (spl[0].match(/[a-z]+:/i)) {
+      newPath = spl.shift() + '/'
+    }
+    return path.normalize(newPath + spl.join('/').replace(/[:?*"><|]/g, ''))
+  }
+
+  updateSelection(selectedRow) {
+    this.selectedRow = selectedRow
+  }
+
+  intoDir(path: string) {   
+    path = this._normalizePath(this.currentDir) + path
+    this.store.dispatch(new ftp.FtpReadDirAction(path))
+  }
+
+  upDir() {
+    if (this.currentDir !== '/') {
+      const path = this.currentDir.substring(0, this.currentDir.lastIndexOf('/'))
+      this.store.dispatch(new ftp.FtpReadDirAction(path))
+    } else {
+      this.refresh()
+    }
+  }
+
   selectFiles() {
     dialog.showOpenDialog({
       title: '选择文件',
@@ -85,16 +108,15 @@ export class IndexComponent implements OnInit, OnDestroy {
         console.log('No file selected');
         return;
       } else {
-        console.log(paths)
+        let localPath = this._slugifyPath(paths[0])
+        
+        let serverPath = this._normalizePath(this.currentDir) + path.parse(localPath).base
+        this.store.dispatch(new ftp.FtpUploadFilesAction({
+          localPath: localPath,
+          serverPath: serverPath,
+        }))
       }
     })
-  }
-
-  private _normalizePath(path: string) {
-    if(path.substring(-1) !== '/') {
-      path += '/'
-    }
-    return path
   }
 
   selectFolder() {
@@ -136,10 +158,9 @@ export class IndexComponent implements OnInit, OnDestroy {
         path: path
       }))
     }
-    const selectedRows = this.gridOptions.api.getSelectedRows()
-    if (selectedRows.length) {
-      const isFolder = selectedRows[0].type === 1
-      const filePath = this._normalizePath(this.currentDir) + selectedRows[0].name
+    if (this.selectedRow) {
+      const isFolder = this.selectedRow.isFolder
+      const filePath = this._normalizePath(this.currentDir) + this.selectedRow.name
       if (isFolder) {
         _removeFolder(filePath)
       } else {
@@ -148,11 +169,18 @@ export class IndexComponent implements OnInit, OnDestroy {
     }
   }
 
+  getFileSize() {
+    this.ftpService
+      .stat('/vs2015.com_chs.iso')
+      .subscribe(
+        (success) => {
+          console.log(success)
+        }
+      )
+  }
+
   handleAction(event) {
     switch(event.type) {
-      case 'Connect':
-        this.store.dispatch(new ftp.FtpReadDirAction('.'))
-        return
       case 'Disconnect':
         this.store.dispatch(new ftp.FtpDisconnectAction({}))
         return
@@ -163,6 +191,10 @@ export class IndexComponent implements OnInit, OnDestroy {
         this.refresh()
         return
       case 'Return':
+        this.upDir()
+        return
+      case 'IntoDir':
+        this.intoDir(event.payload)
         return
       case 'CreateDir':
         this.createFolder()
@@ -172,6 +204,9 @@ export class IndexComponent implements OnInit, OnDestroy {
         return
       case 'UploadFolder':
         this.selectFolder()
+        return
+      case 'SelectionChanged':
+        this.updateSelection(event.payload)
         return
       default:
         console.error('Unknown event:', event)

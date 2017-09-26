@@ -9,6 +9,7 @@ import { PipesModule } from '../../../packages/pipes'
 import { ButtonActionsComponent } from './components/button-actions/button-actions.component'
 
 import { ContentWindowComponent } from './components/content-window/content-window.component'
+import { TransferWindowComponent } from './components/transfer-window/transfer-window.component'
 
 import { IndexComponent } from './components/index.component'
 
@@ -18,6 +19,7 @@ const components = [
   ButtonActionsComponent,
   IndexComponent,
   ContentWindowComponent,
+  TransferWindowComponent,
 ]
 
 const directives = [
