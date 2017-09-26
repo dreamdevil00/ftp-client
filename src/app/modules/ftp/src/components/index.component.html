@@ -1,34 +1,13 @@
 <div>
   <div class="layout-header">
-    <div class="container">
-      <div class="col-lg-6 offset-lg-3">
-        <div class="btn-group" role="group">
-          <button class="btn btn-outline-info" (click)="handleAction({type: 'Return'})">返回上层</button>
-          <button class="btn btn-outline-info" (click)="handleAction({type: 'UploadFiles'})">上传文件</button>
-          <button class="btn btn-outline-info" (click)="handleAction({type: 'UploadFolder'})">上传文件夹</button>
-          <button class="btn btn-outline-info" (click)="handleAction({type: 'CreateDir'})">新建文件夹</button>
-          <button class="btn btn-outline-danger" (click)="handleAction({type: 'Remove'})">删除</button>
-          <button class="btn btn-outline-info" (click)="handleAction({type: 'Refresh'})">刷新</button>
-        </div>
-      </div>
-    </div>
+    <ftp-button-actions (action)="handleAction($event)"></ftp-button-actions>
   </div>
   <hr>
   <div class="layout-main">
-    <div class="container">
-      <div class="col-lg-6 offset-lg-3">
-        <ag-grid-angular style="width: 100%; height: 400px;" class="ag-bootstrap"
-          [gridOptions]="gridOptions" [rowData]="rowData"
-          [columnDefs]="columnDefs" rowSelection="single"
-          enableColResize
-          enableFilter
-          enableSorting
-          suppressRowClickSelection>
-        </ag-grid-angular>
-      </div>
-    </div>
+    <content-window [rowData]="rowData" (action)="handleAction($event)"></content-window>
   </div>
   <div class="layout-footer">
-
+    <transfer-window [queue]="queue"></transfer-window>
+    <button class="btn btn-outline-info" (click)="getFileSize()">获取文件大小</button>
   </div>
 </div>

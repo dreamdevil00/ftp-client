@@ -51,7 +51,10 @@ export class FtpEffects {
         .readdir(action.payload)
         .subscribe(
           (success) => {
-            this.store.dispatch(new FtpActions.FtpReadDirSuccessAction(success))
+            this.store.dispatch(new FtpActions.FtpReadDirSuccessAction({
+              path: action.payload,
+              filesList: success,
+            }))
           },
           (error) => {
             this.store.dispatch(new FtpActions.FtpReadDirErrorAction(error))
@@ -167,7 +170,7 @@ export class FtpEffects {
     .do(
     (action: FtpActions.FtpRemoveFileAction) => {
       this.ftpService
-        .rmfile(action.payload)
+        .rmfile(action.payload.path)
         .subscribe(
         (success) => {
           this.store
@@ -192,7 +195,7 @@ export class FtpEffects {
     .ofType(FtpActions.ActionTypes.FTP_REMOVEFILE_ERROR)
     .do(
     (action: FtpActions.FtpRemoveFileErrorAction) => {
-      console.log('remove dir error: ', action.payload)
+      console.log('remove file error: ', action.payload)
     }
     )
 
@@ -204,6 +207,24 @@ export class FtpEffects {
       let currentDir = action.payload.payload.currentDir
       this.store.dispatch(new FtpActions.FtpReadDirAction(currentDir))
     }
+    )
+
+  @Effect({dispatch: false})
+  uploadFiles: Observable<Action> = this.actions$
+    .ofType(FtpActions.ActionTypes.FTP_UPLOADFILES)
+    .do(
+      (action: FtpActions.FtpUploadFilesAction) => {
+        let localPath = action.payload.localPath
+        let serverPath = action.payload.serverPath
+        this.ftpService
+          .uploadFile(localPath, serverPath)
+          .subscribe(
+            (success) => {},
+            (error) => {
+              console.log('upload error: ', error)
+            }
+          )
+      }
     )
 
   

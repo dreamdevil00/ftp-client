@@ -24,7 +24,7 @@ export function reducer(state = initialState, action: Action): State {
       return Object.assign({}, state, { loggedIn: true })
 
     case 'FTP_READDIR_SUCCESS':
-      return Object.assign({}, state, {filesList: action.payload})
+      return Object.assign({}, state, {filesList: action.payload.filesList, currentDir: action.payload.path})
 
     default:
       return state
