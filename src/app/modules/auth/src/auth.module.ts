@@ -8,8 +8,6 @@ import { AuthRoutingModule } from './auth-routing.module'
 import { LoginComponent } from './components/login/login.component'
 import { LogoutComponent } from './components/logout/logout.component'
 
-import { AuthService } from './auth.service'
-
 @NgModule({
   imports: [
     CommonModule,
@@ -23,7 +21,6 @@ import { AuthService } from './auth.service'
     LogoutComponent,
   ],
   providers: [
-    AuthService,
   ]
 })
 export class AuthModule {}

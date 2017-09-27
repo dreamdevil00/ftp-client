@@ -29,7 +29,6 @@ const reducers: ActionReducerMap<State> = {
     ])
   ],
   providers: [
-    auth.AuthService,
   ]
 })
 export class AppStoreModule {}
