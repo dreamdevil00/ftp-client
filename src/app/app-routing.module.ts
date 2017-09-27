@@ -15,7 +15,7 @@ const routes: Routes = [
     { path: 'router', component: RouterComponent },
     { path: 'not-found', component: NotFoundComponent },
   ] },
-  { path: 'main', component: IndexComponent },
+  { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: 'not-found'},
 ];
 

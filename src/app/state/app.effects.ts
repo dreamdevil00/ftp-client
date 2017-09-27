@@ -15,7 +15,7 @@ export class AppEffects {
   redirectIndex: Observable<Action> = this.action$
     .ofType(app.ActionTypes.APP_REDIRECT_INDEX)
     .do(() => {
-      this.router.navigate(['/' ,'main'])
+      this.router.navigate(['/' ,'index'])
     })
 
   @Effect({ dispatch: false })
