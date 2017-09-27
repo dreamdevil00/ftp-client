@@ -1,0 +1,13 @@
+<div>
+  <div class="layout-header">
+    <index-action-buttons (action)="handleAction($event)"></index-action-buttons>
+  </div>
+  <hr>
+  <div class="layout-main">
+    <index-content-window [rowData]="rowData" (action)="handleAction($event)"></index-content-window>
+  </div>
+  <div class="layout-footer">
+    <index-transfer-window></index-transfer-window>
+    <button class="btn btn-outline-info" (click)="getFileSize()">获取文件大小</button>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="container">
+  <div class="col-lg-8 offset-lg-2">
+    <ag-grid-angular style="width: 100%; height: 400px;" class="ag-bootstrap" [gridOptions]="gridOptions" [rowData]="rowData"
+      [columnDefs]="columnDefs" rowSelection="single" enableColResize enableFilter enableSorting suppressRowClickSelection
+      (rowDoubleClicked)="handleAction({type: 'IntoDir', payload: $event })" (selectionChanged)="handleAction({type: 'SelectionChanged'})">
+    </ag-grid-angular>
+  </div>
+</div>

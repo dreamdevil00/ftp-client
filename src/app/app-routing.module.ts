@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { NotFoundComponent } from './components/not-found/not-found.component'
-import { IndexComponent } from './modules/ftp'
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { LoginComponent } from './components/auth/login/login.component';
+
+import { IndexComponent } from './components/index/index.component';
 
 import { SimpleLayoutComponent } from './packages/layout'
 
-import { RouterComponent } from './components/router/router.component'
-
 const routes: Routes = [
-  { path: '', redirectTo: 'router', pathMatch: 'full'},
+  { path: '', redirectTo: 'login', pathMatch: 'full'},
   { path: '', component: SimpleLayoutComponent, children: [
-    { path: '', loadChildren: './modules/auth#AuthModule'},
-    { path: 'router', component: RouterComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'index', component: IndexComponent },
     { path: 'not-found', component: NotFoundComponent },
   ] },
   { path: 'index', component: IndexComponent },

@@ -1,21 +1,25 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'
-import { RouterModule } from '@angular/router'
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { AppRoutingModule } from './app-routing.module'
-import { AppStoreModule } from './app.store'
-import { DreamLayoutModule } from './packages/layout'
-import { DreamUiModule } from './packages/ui'
+import { AppRoutingModule } from './app-routing.module';
+
+import { DreamLayoutModule } from './packages/layout';
+import { DreamUiModule } from './packages/ui';
+
+import { AgGridModule } from 'ag-grid-angular/main'
 
 import { AppComponent } from './app.component';
-import { NotFoundComponent } from './components/not-found/not-found.component'
-import { RouterComponent } from './components/router/router.component'
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { LoginComponent } from './components/auth/login/login.component';
 
-import { FtpModule } from './modules/ftp'
-import { FtpSDKModule } from './packages/ftp-sdk'
+import { ActionButtonsComponent } from './components/index/action-buttons/action-buttons.component';
+import { ContentWindowComponent } from './components/index/content-window/content-window.component';
+import { TransferWindowComponent } from './components/index/transfer-window/transfer-window.component';
+import { IndexComponent } from './components/index/index.component'
 
-import { PipesModule } from './packages/pipes'
+import { FtpService } from './services/ftp.service';
 
 
 const modules = [
@@ -24,19 +28,22 @@ const modules = [
   AppRoutingModule,
   DreamLayoutModule,
   DreamUiModule,
-  PipesModule,
-  FtpModule,
-  AppStoreModule,
-  FtpSDKModule.forRoot(),
-]
+
+  AgGridModule.withComponents([])
+];
 
 const components = [
   NotFoundComponent,
-  RouterComponent,
+  LoginComponent,
+
+  ActionButtonsComponent,
+  ContentWindowComponent,
+  TransferWindowComponent,
+  IndexComponent,
 ];
 
 const directives = [
-]
+];
 
 @NgModule({
   declarations: [
@@ -47,6 +54,9 @@ const directives = [
   imports: [
     BrowserModule,
     modules,
+  ],
+  providers: [
+    FtpService,
   ],
   bootstrap: [AppComponent]
 })
