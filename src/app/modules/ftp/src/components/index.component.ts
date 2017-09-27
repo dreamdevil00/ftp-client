@@ -12,6 +12,8 @@ import { remote } from 'electron'
 
 const dialog = remote.dialog
 
+import { FtpUser } from '../../../../packages/ftp-sdk'
+
 @Component({
   selector: 'ftp-index',
   templateUrl: './index.component.html'
@@ -194,7 +196,7 @@ export class IndexComponent implements OnInit, OnDestroy {
         this.upDir()
         return
       case 'IntoDir':
-        this.intoDir(event.payload)
+        this.store.dispatch(new ftp.FtpReadDirAction(event.payload))
         return
       case 'CreateDir':
         this.createFolder()

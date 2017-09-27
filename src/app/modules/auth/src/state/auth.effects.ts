@@ -1,12 +1,13 @@
 import { get } from 'lodash'
-import { Injectable } from '@angular/core'
+import { Injectable, NgZone } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 
 import * as auth from './auth.actions'
 import * as ftp from '../../../../packages/ftp-sdk'
-import { AuthService } from '../auth.service'
+
+import * as storage from 'electron-json-storage'
 
 @Injectable()
 export class AuthEffects {
@@ -15,21 +16,31 @@ export class AuthEffects {
   login: Observable<Action> = this.actions$
     .ofType(auth.ActionTypes.AUTH_LOGIN)
     .do((action: auth.AuthLoginAction) => {
-      return this.ftpService
-        .connect(action.payload)
+      // only update credentials when user login
+      storage.set('credentials', action.payload, (err) => {
+        if (err) throw err
+        return ftp.FtpService
+        .getInstance()
         .subscribe(
           (success) => {
+            this.NgZone.run(() => {
             this.store
               .dispatch(new ftp.FtpReadDirAction('.'))
             this.store
-              .dispatch(new auth.AuthLoginSuccessAction(success))
+                  .dispatch(new auth.AuthLoginSuccessAction(success))
+            })           
           })
+      })
+      
     })
 
   @Effect({ dispatch: false })
   loginError: Observable<Action> = this.actions$
     .ofType(auth.ActionTypes.AUTH_LOGIN_ERROR)
-    .do((action) => {})
+    .do((action) => {
+      return this.store
+        .dispatch({ type: 'APP_REDIRECT_ROUTER' })
+    })
 
   @Effect({ dispatch: false })
   loginSuccess: Observable<Action> = this.actions$
@@ -60,8 +71,8 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private store: Store<any>,
-    private authService: AuthService,
     private ftpService: ftp.FtpService,
+    private NgZone: NgZone,
   ) {
   }
 

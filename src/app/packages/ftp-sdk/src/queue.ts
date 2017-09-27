@@ -1,5 +1,4 @@
 interface queueEntry {
-  id: number
   localPath: string
   serverPath: string
   isDirectory: boolean
@@ -9,10 +8,27 @@ interface queueEntry {
 
 export class Queue {
 
-  queue: any[]
+  static queue: any[] = []
 
-  static listeners: any[] = []
+  static listener: any
 
+  static getEntries() {
+    return this.queue
+  }
+
+  static addToQueueBulk(entries: any[]) {
+    entries.forEach((item) => {
+      this.queue.push(item)
+    })
+    this.sendToListener('transfer-add-bulk', entries)
+
+  }
+
+  static sendToListener(action, payload) {
+    this.listener.onMessage(action, payload)
+  }
+
+  static transfer
   
 
 }

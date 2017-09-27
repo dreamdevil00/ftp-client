@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, NgZone } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { Action, Store } from '@ngrx/store'
 import { Effect, Actions } from '@ngrx/effects'
@@ -16,7 +16,7 @@ export class FtpEffects {
     .ofType(FtpActions.ActionTypes.FTP_CONNECT)
     .do((action: FtpActions.FtpConnectAction) => {
       this.ftpService
-        .connect(action.payload)
+        .connect()
         .subscribe(
           (success) => {
             this.store.dispatch(new FtpActions.FtpConnectSuccessAction(success))
@@ -47,17 +47,23 @@ export class FtpEffects {
   readDir: Observable<Action> = this.actions$
     .ofType(FtpActions.ActionTypes.FTP_READDIR)
     .do((action: FtpActions.FtpReadDirAction) => {
-      this.ftpService
-        .readdir(action.payload)
+      FtpService.getInstance()
         .subscribe(
-          (success) => {
-            this.store.dispatch(new FtpActions.FtpReadDirSuccessAction({
-              path: action.payload,
-              filesList: success,
-            }))
-          },
-          (error) => {
-            this.store.dispatch(new FtpActions.FtpReadDirErrorAction(error))
+          (instance) => {
+            this.NgZone.run(() => {
+              instance.readdir(action.payload)
+                .subscribe(
+                  (success) => {
+                    this.store.dispatch(new FtpActions.FtpReadDirSuccessAction({
+                      path: action.payload,
+                      filesList: success,
+                    }))
+                  },
+                  (error) => {
+                    this.store.dispatch(new FtpActions.FtpReadDirErrorAction(error))
+                  }
+                )
+            }) 
           }
         )
     })
@@ -124,7 +130,7 @@ export class FtpEffects {
     .ofType(FtpActions.ActionTypes.FTP_REMOVEDIR)
     .do(
       (action: FtpActions.FtpRemoveDirAction) => {
-        this.ftpService
+        /*this.ftpService
           .rmdir(action.payload.path)
           .subscribe(
             (success) => {
@@ -141,7 +147,7 @@ export class FtpEffects {
                   result: error
                 }))
             }
-          )
+          ) */
       }
     )
 
@@ -216,14 +222,14 @@ export class FtpEffects {
       (action: FtpActions.FtpUploadFilesAction) => {
         let localPath = action.payload.localPath
         let serverPath = action.payload.serverPath
-        this.ftpService
+        /*this.ftpService
           .uploadFile(localPath, serverPath)
           .subscribe(
             (success) => {},
             (error) => {
               console.log('upload error: ', error)
             }
-          )
+          ) */
       }
     )
 
@@ -233,5 +239,6 @@ export class FtpEffects {
     private actions$: Actions,
     private store: Store<any>,
     private ftpService: FtpService,
+    private NgZone: NgZone,
   ) {}
 }

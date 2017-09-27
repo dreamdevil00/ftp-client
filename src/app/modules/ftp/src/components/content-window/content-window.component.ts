@@ -23,8 +23,9 @@ export class ContentWindowComponent implements OnInit {
         headerName: '#', width: 30, checkboxSelection: true, suppressSorting: true,
         suppressMenu: true, pinned: true,
       },
-      { headerName: '文件', field: 'name' },
+      { headerName: '文件名', field: 'filename' },
       { headerName: '大小', field: 'size' },
+      { headerName: '修改时间', field: 'mtime'},
     ]
   }
 
@@ -35,19 +36,19 @@ export class ContentWindowComponent implements OnInit {
     switch (event.type) {
       case 'IntoDir':
         let $event = event.payload
-        let isFolder = $event.data.type === 1
+        let isFolder = $event.data.isDirectory
         if (isFolder) {
-          this.action.emit({type: 'IntoDir', payload: $event.data.name})
+          this.action.emit({type: 'IntoDir', payload: $event.data.path})
         }
         break
       case 'SelectionChanged':
         let selectedRows = this.gridOptions.api.getSelectedRows()
         if (selectedRows.length) {
-          let isFolder = selectedRows[0].type === 1
-          let name = selectedRows[0].name
+          let isFolder = selectedRows[0].isDirectory
+          let path = selectedRows[0].path
           this.action.emit({type: 'SelectionChanged', payload: {
             isFolder: isFolder,
-            name: name
+            path: path,
           }})
         }
         break
