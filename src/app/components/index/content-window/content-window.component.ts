@@ -13,7 +13,7 @@ export class ContentWindowComponent implements OnInit {
   @Output() action = new EventEmitter();
 
   private gridOptions: GridOptions;
-  private columnDefs: any[];
+  columnDefs: any[];
 
   constructor() {
     this.gridOptions = <GridOptions>{};
@@ -36,6 +36,7 @@ export class ContentWindowComponent implements OnInit {
     switch (event.type) {
       case 'IntoDir':
         const $event = event.payload;
+
         const isFolder = $event.data.isDirectory;
         if (isFolder) {
           this.action.emit({type: 'IntoDir', payload: $event.data.path});
@@ -47,7 +48,7 @@ export class ContentWindowComponent implements OnInit {
           const isDirectory = selectedRows[0].isDirectory;
           const path = selectedRows[0].path;
           this.action.emit({type: 'SelectionChanged', payload: {
-            isFolder: isFolder,
+            isFolder: isDirectory,
             path: path,
           }});
         }
