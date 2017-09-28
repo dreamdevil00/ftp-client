@@ -34,7 +34,28 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.selectedRow = null;
   }
 
+  private _readCurDir() {
+    const subscription =
+    this.ftpService
+      .getConnection()
+      .subscribe(
+      (connection) => {
+        connection.readdir(this.currentDir)
+          .subscribe(
+          (list) => {
+            this._ngZone.run(() => {
+              this.rowData = list;
+            });
+          }
+          );
+      }
+      );
+
+    this.subscriptions.push(subscription);
+  }
+
   ngOnInit() {
+    this._readCurDir();
   }
 
   ngOnDestroy() {
@@ -44,13 +65,7 @@ export class IndexComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-  }
-
-  private _normalizePath(path: string) {
-    if (path.substring(-1) !== '/') {
-      path += '/';
-    }
-    return path;
+    this._readCurDir();
   }
 
   private _slugifyPath(fullPath: string) {
@@ -67,13 +82,28 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.selectedRow = selectedRow;
   }
 
-  intoDir(path: string) {
-    path = this._normalizePath(this.currentDir) + path;
+  intoDir(_path: string) {
+    this.ftpService
+      .getConnection()
+      .subscribe(
+      (connection) => {
+        connection.readdir(_path)
+          .subscribe(
+          (list) => {
+            this._ngZone.run(() => {
+              this.rowData = list;
+              this.currentDir = _path;
+            });
+          }
+          );
+      }
+      );
   }
 
   upDir() {
     if (this.currentDir !== '/') {
-      const path = this.currentDir.substring(0, this.currentDir.lastIndexOf('/'));
+      const _path = this.currentDir.substring(0, this.currentDir.lastIndexOf('/'));
+      this.intoDir(_path);
     } else {
       this.refresh();
     }
@@ -90,7 +120,7 @@ export class IndexComponent implements OnInit, OnDestroy {
       } else {
         const localPath = this._slugifyPath(paths[0]);
 
-        const serverPath = this._normalizePath(this.currentDir) + path.parse(localPath).base;
+        const serverPath = this.currentDir + '/' + path.parse(localPath).base;
       }
     });
   }
@@ -111,20 +141,61 @@ export class IndexComponent implements OnInit, OnDestroy {
 
   createFolder() {
     const successCb = (res) => {
-      const path = this._normalizePath(this.currentDir) + res;
+      let path = null;
+      if (this.currentDir === '/') {
+        path = this.currentDir + res;
+      } else {
+        path = this.currentDir + '/' + res;
+      }
+      this.ftpService
+        .getConnection()
+        .subscribe(
+          (connection) => {
+            connection.mkdir(path)
+              .subscribe(
+              (success) => {
+                this.refresh();
+              }
+              );
+          }
+        );
     };
     this.ui.alertInput({ title: '请输入目录名'}, successCb, () => {});
   }
 
 
   remove() {
-    const _removeFolder = (path) => {
+    const _removeFolder = (_path) => {
+      this.ftpService
+        .getConnection()
+        .subscribe(
+          (connection) => {
+            connection.rmdir(_path)
+              .subscribe(
+                (success) => {
+                  this.refresh();
+                }
+              );
+          }
+        );
     };
-    const _removeFile = (path) => {
+    const _removeFile = (_path) => {
+        this.ftpService
+          .getConnection()
+          .subscribe(
+            (connection) => {
+              connection.rmfile(_path)
+              .subscribe(
+                (success) => {
+                  this.refresh();
+                }
+              );
+            }
+          );
     };
     if (this.selectedRow) {
       const isFolder = this.selectedRow.isFolder;
-      const filePath = this._normalizePath(this.currentDir) + this.selectedRow.name;
+      const filePath = this.selectedRow.path;
       if (isFolder) {
         _removeFolder(filePath);
       } else {
@@ -157,6 +228,7 @@ export class IndexComponent implements OnInit, OnDestroy {
         this.upDir();
         return;
       case 'IntoDir':
+        this.intoDir(event.payload);
         return;
       case 'CreateDir':
         this.createFolder();
