@@ -17,7 +17,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { ActionButtonsComponent } from './components/index/action-buttons/action-buttons.component';
 import { ContentWindowComponent } from './components/index/content-window/content-window.component';
 import { TransferWindowComponent } from './components/index/transfer-window/transfer-window.component';
-import { IndexComponent } from './components/index/index.component'
+import { IndexComponent } from './components/index/index.component';
 
 import { FtpService } from './services/ftp.service';
 
