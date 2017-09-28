@@ -469,14 +469,26 @@ module.exports = {
     "historyApiFallback": true
   },
   "externals": {
-    "assert": "require('assert')",
-    "child_process": "require('child_process')",
-    "cluster": "require('cluster')",
-    "crypto": "require('crypto')",
     "electron": "require('electron')",
+    "child_process": "require('child_process')",
+    "crypto": "require('crypto')",
+    "events": "require('events')",
     "fs": "require('fs')",
+    "http": "require('http')",
+    "https": "require('https')",
+    "assert": "require('assert')",
+    "dns": "require('dns')",
     "net": "require('net')",
-    "stream": "require('stream')"
+    "os": "require('os')",
+    "path": "require('path')",
+    "querystring": "require('querystring')",
+    "readline": "require('readline')",
+    "repl": "require('repl')",
+    "stream": "require('stream')",
+    "string_decoder": "require('string_decoder')",
+    "url": "require('url')",
+    "util": "require('util')",
+    "zlib": "require('zlib')"
   },
   "target": "electron-renderer"
 };
