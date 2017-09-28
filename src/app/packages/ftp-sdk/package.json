@@ -1,8 +1,0 @@
-{
-  "name": "@dream/ftp-sdk",
-  "version": "0.0.0",
-  "dependencies": {
-    "jsftp": "^2.0.0"
-  },
-  "license": "MIT"
-}
