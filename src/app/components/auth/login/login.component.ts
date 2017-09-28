@@ -1,9 +1,7 @@
 import { Component, NgZone } from '@angular/core';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 import { FtpService } from '../../../services/ftp.service';
-
-import * as storage from 'electron-json-storage';
 
 @Component({
   templateUrl: './login.component.html'
@@ -31,14 +29,14 @@ export class LoginComponent {
   }
 
   login() {
-    this.ftpService.credentials = this.credentials
+    this.ftpService.credentials = this.credentials;
     this.ftpService.getConnection()
       .subscribe(
         (success) => {
           this.NgZone.run(() => {
             this.router.navigate(['/', 'index']);
-          })
+          });
         }
-      )
+      );
   }
 }
