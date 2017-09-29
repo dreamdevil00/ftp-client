@@ -8,12 +8,12 @@ import { GridOptions } from 'ag-grid/main';
 })
 export class TransferWindowComponent {
 
-  @Input() private queue: any[];
+  @Input() queue: any[];
 
-  private rowData: any[];
-  private columnDefs: any[];
+  // private rowData: any[];
+  columnDefs: any[];
 
-  private gridOptions = <GridOptions>{};
+  gridOptions = <GridOptions>{};
   constructor() {
     this.createColumnDefs();
     this.createRowData();
@@ -38,6 +38,7 @@ export class TransferWindowComponent {
   }
 
   createRowData() {
+    /*
     this.rowData = [
       {
         localPath: 'E:/开发/环境搭建/strongloop/vs2015/vs2015.com_chs.iso',
@@ -45,7 +46,7 @@ export class TransferWindowComponent {
         fileSize: '3919844000',
         uploaded: '30',
       }
-    ];
+    ]; */
   }
 }
 

@@ -6,8 +6,11 @@ import * as path from 'path';
 import { UiService } from '../../packages/ui';
 import { FtpService } from '../../services/ftp.service';
 
+
 import { remote } from 'electron';
 const dialog = remote.dialog;
+
+import { FileUploader } from '../../file-upload/src/file-uploader.class';
 
 
 @Component({
@@ -17,6 +20,9 @@ const dialog = remote.dialog;
 export class IndexComponent implements OnInit, OnDestroy {
 
   private currentDir: string;
+  public uploader: FileUploader = new FileUploader();
+
+  public filenames: any[] = ['placeholder'];
 
   rowData: any[];
   private subscriptions: Subscription[];
@@ -24,7 +30,7 @@ export class IndexComponent implements OnInit, OnDestroy {
   private selectedRow: any;
 
   constructor(
-    private ftpService: FtpService,
+    public ftpService: FtpService,
     private _ngZone: NgZone,
     private ui: UiService,
   ) {
@@ -118,9 +124,25 @@ export class IndexComponent implements OnInit, OnDestroy {
         console.log('No file selected');
         return;
       } else {
-        const localPath = this._slugifyPath(paths[0]);
-
-        const serverPath = this.currentDir + '/' + path.parse(localPath).base;
+        const handledPaths = paths.map(item => {
+          const localPath = this._slugifyPath(item);
+          let serverPath;
+          if (this.currentDir === '/') {
+            serverPath = '/' + path.basename(localPath);
+          } else {
+            serverPath = this.currentDir + '/' + path.basename(localPath);
+          }
+          return {
+            localPath: localPath,
+            serverPath: serverPath,
+            fileSize: '3919844000',
+            uploaded: '30',
+          };
+        });
+        this._ngZone.run(() => {
+          //this.ftpService.queue.push(handledPaths[0]);
+          this.ftpService.addToQueue(handledPaths);
+        });
       }
     });
   }
@@ -170,7 +192,7 @@ export class IndexComponent implements OnInit, OnDestroy {
         .getConnection()
         .subscribe(
           (connection) => {
-            connection.rmdir(_path)
+            connection.rmdir(_path, true)
               .subscribe(
                 (success) => {
                   this.refresh();

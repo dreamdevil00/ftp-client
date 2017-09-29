@@ -7,7 +7,6 @@
     <index-content-window [rowData]="rowData" (action)="handleAction($event)"></index-content-window>
   </div>
   <div class="layout-footer">
-    <index-transfer-window></index-transfer-window>
-    <button class="btn btn-outline-info" (click)="getFileSize()">获取文件大小</button>
+    <index-transfer-window [queue]="ftpService.queue"></index-transfer-window>
   </div>
 </div>

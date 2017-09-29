@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as Ftp from 'ftp';
 import { Observable } from 'rxjs/Rx';
 
+import { Entry } from './entry';
+
 import * as path from 'path';
 
 @Injectable()
@@ -11,17 +13,35 @@ export class FtpService {
   public connected: boolean;
   public credentials: any;
 
+  public queue: any[] = [];
+  public isUploading = false;
+  public progress = 0;
+  public _nextIndex = 0;
+
 
   constructor(
   ) {
     this.ftp = null;
     this.connected = false;
   }
+
+  addToQueue(files: any[]) {
+    this.queue = this.queue.concat(files);
+  }
+
+  clearQueue(): void {
+    this.queue = [];
+  }
+
+  uploadEntry(entry: Entry) {
+
+  }
+
   getConnection(): Observable<any> {
     if (this.connected) {
-      return Observable.from([this])
+      return Observable.from([this]);
     }
-    return this.connect()
+    return this.connect();
   }
 
   connect(): Observable<any> {
@@ -186,5 +206,11 @@ export class FtpService {
     };
     const statAsObservable = Observable.bindNodeCallback(_stat);
     return statAsObservable(filePath);
+  }
+
+  upload(localPath, serverPath, callback) {
+    if (this.ftp) {
+      this.ftp.put(localPath, serverPath, callback);
+    }
   }
 }

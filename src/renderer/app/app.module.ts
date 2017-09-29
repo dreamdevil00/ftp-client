@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -8,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DreamLayoutModule } from './packages/layout';
 import { DreamUiModule } from './packages/ui';
 
-import { AgGridModule } from 'ag-grid-angular/main'
+import { AgGridModule } from 'ag-grid-angular/main';
 
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -24,6 +25,7 @@ import { FtpService } from './services/ftp.service';
 
 const modules = [
   FormsModule,
+  CommonModule,
   RouterModule,
   AppRoutingModule,
   DreamLayoutModule,
