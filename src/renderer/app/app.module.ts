@@ -20,7 +20,7 @@ import { ContentWindowComponent } from './components/index/content-window/conten
 import { TransferWindowComponent } from './components/index/transfer-window/transfer-window.component';
 import { IndexComponent } from './components/index/index.component';
 
-import { FtpService } from './services/ftp.service';
+import { IpcRendererService } from './services/ipc-renderer.service';
 
 
 const modules = [
@@ -58,7 +58,10 @@ const directives = [
     modules,
   ],
   providers: [
-    FtpService,
+ //   FtpService,
+ //   FileService,
+ //   SettingService,
+    IpcRendererService,
   ],
   bootstrap: [AppComponent]
 })

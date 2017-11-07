@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
 
 @Component({
@@ -9,6 +9,7 @@ import { GridOptions } from 'ag-grid/main';
 export class TransferWindowComponent {
 
   @Input() queue: any[];
+  @Output() action = new EventEmitter();
 
   // private rowData: any[];
   columnDefs: any[];
@@ -16,7 +17,6 @@ export class TransferWindowComponent {
   gridOptions = <GridOptions>{};
   constructor() {
     this.createColumnDefs();
-    this.createRowData();
   }
 
   createColumnDefs() {
@@ -27,51 +27,17 @@ export class TransferWindowComponent {
       },
       { headerName: '本地路径', field: 'localPath' },
       { headerName: '服务器路径', field: 'serverPath' },
-      { headerName: '文件大小', field: 'fileSize' },
+      { headerName: '文件大小', field: 'size' },
+      { headerName: '状态', field: 'status'},
       {
         headerName: '上传进度',
         field: 'uploaded',
         width: 120,
-        cellRenderer: percentCellRenderer,
       },
     ];
   }
 
-  createRowData() {
-    /*
-    this.rowData = [
-      {
-        localPath: 'E:/开发/环境搭建/strongloop/vs2015/vs2015.com_chs.iso',
-        serverPath: '/vs2015.com_chs.iso',
-        fileSize: '3919844000',
-        uploaded: '30',
-      }
-    ]; */
+  handleAction(event) {
+    this.action.emit(event);
   }
-}
-
-function percentCellRenderer(params) {
-  const value = params.value;
-
-  const eDivPercentBar = document.createElement('div');
-  eDivPercentBar.className = 'dev-percent-bar';
-  eDivPercentBar.style.width = value + '%';
-  if (value < 20) {
-    eDivPercentBar.style.backgroundColor = 'red';
-  } else if (value < 60) {
-    eDivPercentBar.style.backgroundColor = '#ff9900';
-  } else {
-    eDivPercentBar.style.backgroundColor = '#00A000';
-  }
-
-  const eValue = document.createElement('div');
-  eValue.className = 'div-percent-value';
-  eValue.innerHTML = value + '%';
-
-  const eOuterDiv = document.createElement('div');
-  eOuterDiv.className = 'div-outer-div';
-  eOuterDiv.appendChild(eValue);
-  eOuterDiv.appendChild(eDivPercentBar);
-
-  return eOuterDiv;
 }

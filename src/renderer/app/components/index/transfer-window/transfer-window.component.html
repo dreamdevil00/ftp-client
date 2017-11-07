@@ -5,6 +5,8 @@
     </ag-grid-angular>
   </div>
   <div class="col-lg-6 offset-lg-3 transfer-actions">
-    <button class="btn btn-outline-info">全部暂停</button>
+    <button class="btn btn-outline-info" (click)="handleAction({type: 'StartAll'})">全部开始</button>
+    <button class="btn btn-outline-info" (click)="handleAction({type: 'StopAll'})">全部暂停</button>
+    <button class="btn btn-outline-info"></button>
   </div>
 </div>

@@ -4,13 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 import * as path from 'path';
 
 import { UiService } from '../../packages/ui';
-import { FtpService } from '../../services/ftp.service';
-
-
-import { remote } from 'electron';
-const dialog = remote.dialog;
-
-import { FileUploader } from '../../file-upload/src/file-uploader.class';
+import { IpcRendererService } from '../../services/ipc-renderer.service';
 
 
 @Component({
@@ -20,54 +14,43 @@ import { FileUploader } from '../../file-upload/src/file-uploader.class';
 export class IndexComponent implements OnInit, OnDestroy {
 
   private currentDir: string;
-  public uploader: FileUploader = new FileUploader();
+  public queue: any[];
 
   public filenames: any[] = ['placeholder'];
 
   rowData: any[];
-  private subscriptions: Subscription[];
 
   private selectedRow: any;
 
   constructor(
-    public ftpService: FtpService,
     private _ngZone: NgZone,
+    private _ipcRenderer: IpcRendererService,
     private ui: UiService,
   ) {
-    this.subscriptions = [];
     this.rowData = [];
     this.currentDir = '/';
     this.selectedRow = null;
   }
 
   private _readCurDir() {
-    const subscription =
-    this.ftpService
-      .getConnection()
-      .subscribe(
-      (connection) => {
-        connection.readdir(this.currentDir)
-          .subscribe(
-          (list) => {
-            this._ngZone.run(() => {
-              this.rowData = list;
-            });
-          }
-          );
-      }
-      );
-
-    this.subscriptions.push(subscription);
+    this._ipcRenderer.api('readDir', this.currentDir)
+      .then((res: string[]) => {
+        this._ngZone.run(() => {
+          this.rowData = res;
+        });
+      });
   }
 
   ngOnInit() {
     this._readCurDir();
+    this._ipcRenderer.on('transfer-queue-add', (e: Electron.Event, entries) => {
+      this._ngZone.run(() => {
+        this.queue = entries;
+      });
+    });
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
   }
 
   refresh() {
@@ -89,21 +72,13 @@ export class IndexComponent implements OnInit, OnDestroy {
   }
 
   intoDir(_path: string) {
-    this.ftpService
-      .getConnection()
-      .subscribe(
-      (connection) => {
-        connection.readdir(_path)
-          .subscribe(
-          (list) => {
-            this._ngZone.run(() => {
-              this.rowData = list;
-              this.currentDir = _path;
-            });
-          }
-          );
-      }
-      );
+    this._ipcRenderer.api('readDir', _path)
+      .then((res: string[]) => {
+        this._ngZone.run(() => {
+          this.rowData = res;
+          this.currentDir = _path;
+        });
+      });
   }
 
   upDir() {
@@ -116,49 +91,17 @@ export class IndexComponent implements OnInit, OnDestroy {
   }
 
   selectFiles() {
-    dialog.showOpenDialog({
-      title: '选择文件',
-      properties: ['openFile', 'multiSelections'],
-    }, (paths) => {
-      if (typeof paths === 'undefined') {
-        console.log('No file selected');
-        return;
-      } else {
-        const handledPaths = paths.map(item => {
-          const localPath = this._slugifyPath(item);
-          let serverPath;
-          if (this.currentDir === '/') {
-            serverPath = '/' + path.basename(localPath);
-          } else {
-            serverPath = this.currentDir + '/' + path.basename(localPath);
-          }
-          return {
-            localPath: localPath,
-            serverPath: serverPath,
-            fileSize: '3919844000',
-            uploaded: '30',
-          };
-        });
-        this._ngZone.run(() => {
-          //this.ftpService.queue.push(handledPaths[0]);
-          this.ftpService.addToQueue(handledPaths);
-        });
-      }
-    });
+    this._ipcRenderer.api('selectFile', this.currentDir)
+      .then(() => {
+
+      });
   }
 
   selectFolder() {
-    dialog.showOpenDialog({
-      title: '选择文件夹',
-      properties: ['openDirectory', 'multiSelections'],
-    }, (paths) => {
-      if (typeof paths === 'undefined') {
-        console.log('No folder selected');
-        return;
-      } else {
-        console.log(paths);
-      }
-    });
+    this._ipcRenderer.api('selectFolder', this.currentDir)
+      .then(() => {
+
+      });
   }
 
   createFolder() {
@@ -169,71 +112,20 @@ export class IndexComponent implements OnInit, OnDestroy {
       } else {
         path = this.currentDir + '/' + res;
       }
-      this.ftpService
-        .getConnection()
-        .subscribe(
-          (connection) => {
-            connection.mkdir(path)
-              .subscribe(
-              (success) => {
-                this.refresh();
-              }
-              );
-          }
-        );
+      this._ipcRenderer.api('createDir', path)
+        .then(() => {
+          this.refresh();
+        });
     };
     this.ui.alertInput({ title: '请输入目录名'}, successCb, () => {});
   }
 
 
   remove() {
-    const _removeFolder = (_path) => {
-      this.ftpService
-        .getConnection()
-        .subscribe(
-          (connection) => {
-            connection.rmdir(_path, true)
-              .subscribe(
-                (success) => {
-                  this.refresh();
-                }
-              );
-          }
-        );
-    };
-    const _removeFile = (_path) => {
-        this.ftpService
-          .getConnection()
-          .subscribe(
-            (connection) => {
-              connection.rmfile(_path)
-              .subscribe(
-                (success) => {
-                  this.refresh();
-                }
-              );
-            }
-          );
-    };
-    if (this.selectedRow) {
-      const isFolder = this.selectedRow.isFolder;
-      const filePath = this.selectedRow.path;
-      if (isFolder) {
-        _removeFolder(filePath);
-      } else {
-        _removeFile(filePath);
-      }
-    }
   }
 
-  getFileSize() {
-    this.ftpService
-      .stat('/vs2015.com_chs.iso')
-      .subscribe(
-        (success) => {
-          console.log(success);
-        }
-      );
+  startAll() {
+    // this._ipcRenderer.api('startAll');
   }
 
   handleAction(event) {
@@ -263,6 +155,9 @@ export class IndexComponent implements OnInit, OnDestroy {
         return;
       case 'SelectionChanged':
         this.updateSelection(event.payload);
+        return;
+      case 'StartAll':
+        this.startAll();
         return;
       default:
         console.error('Unknown event:', event);

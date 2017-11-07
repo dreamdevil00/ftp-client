@@ -1,42 +1,43 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { FtpService } from '../../../services/ftp.service';
+import { IpcRendererService } from '../../../services/ipc-renderer.service';
 
 @Component({
   templateUrl: './login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   credentials = {
-    host: '',
+    host: '10.132.184.93',
     port: 21,
-    username: '',
-    password: '',
+    username: 'demo',
+    password: 'Password',
   };
 
   constructor(
     private router: Router,
-    private ftpService: FtpService,
+    private ipcRenderer: IpcRendererService,
     private NgZone: NgZone,
   ) {
-    this.credentials = {
-      host: '10.132.184.93',
-      port: 21,
-      username: 'demo',
-      password: 'Passw0rd',
-    };
+  }
+
+  ngOnInit() {
+    this.ipcRenderer.api('getSetting', null)
+      .then((setting: any) => {
+        this.NgZone.run(() => {
+          this.credentials.host = setting && setting.host || this.credentials.host;
+          this.credentials.port = setting && setting.port || this.credentials.port;
+          this.credentials.username = setting && setting.user || this.credentials.username;
+          this.credentials.password = setting && setting.password || this.credentials.password;
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   login() {
-    this.ftpService.credentials = this.credentials;
-    this.ftpService.getConnection()
-      .subscribe(
-        (success) => {
-          this.NgZone.run(() => {
-            this.router.navigate(['/', 'index']);
-          });
-        }
-      );
+    this.ipcRenderer.api('saveSetting', this.credentials);
   }
 }
