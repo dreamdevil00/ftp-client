@@ -1,0 +1,12 @@
+<div>
+  <div class="layout-header">
+    <index-action-buttons (action)="handleAction($event)"></index-action-buttons>
+  </div>
+  <hr>
+  <div class="layout-main">
+    <index-content-window [rowData]="rowData" (action)="handleAction($event)"></index-content-window>
+  </div>
+  <div class="layout-footer">
+    <index-transfer-window [queue]="queue" (action)="handleAction($event)"></index-transfer-window>
+  </div>
+</div>

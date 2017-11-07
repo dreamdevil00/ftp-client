@@ -15,7 +15,7 @@ const { AotPlugin } = require('@ngtools/webpack');
 
 const nodeModules = path.join(process.cwd(), 'node_modules');
 const realNodeModules = fs.realpathSync(nodeModules);
-const genDirNodeModules = path.join(process.cwd(), 'src', '$$_gendir', 'node_modules');
+const genDirNodeModules = path.join(process.cwd(), 'src/renderer', '$$_gendir', 'node_modules');
 const entryPoints = ["inline","polyfills","sw-register","styles","vendor","main"];
 const minimizeCss = false;
 const baseHref = "";
@@ -79,17 +79,17 @@ module.exports = {
   },
   "entry": {
     "main": [
-      "./src\\main.ts"
+      "./src\\renderer\\main.ts"
     ],
     "polyfills": [
-      "./src\\polyfills.ts"
+      "./src\\renderer\\polyfills.ts"
     ],
     "styles": [
-      "./src\\styles.scss"
+      "./src\\renderer\\styles.scss"
     ]
   },
   "output": {
-    "path": path.join(process.cwd(), "dist"),
+    "path": path.join(process.cwd(), "dist/renderer"),
     "filename": "[name].bundle.js",
     "chunkFilename": "[id].chunk.js"
   },
@@ -117,7 +117,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.css$/,
         "use": [
@@ -140,7 +140,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.scss$|\.sass$/,
         "use": [
@@ -171,7 +171,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.less$/,
         "use": [
@@ -201,7 +201,7 @@ module.exports = {
       },
       {
         "exclude": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.styl$/,
         "use": [
@@ -231,7 +231,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.css$/,
         "use": [
@@ -254,7 +254,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.scss$|\.sass$/,
         "use": [
@@ -285,7 +285,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.less$/,
         "use": [
@@ -315,7 +315,7 @@ module.exports = {
       },
       {
         "include": [
-          path.join(process.cwd(), "src\\styles.scss")
+          path.join(process.cwd(), "src\\renderer\\styles.scss")
         ],
         "test": /\.styl$/,
         "use": [
@@ -353,7 +353,7 @@ module.exports = {
     new NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([
       {
-        "context": "E:\\work\\development\\ftp-webapp\\webapp\\src/",
+        "context": "E:\\work\\development\\ftp-webapp\\src\\renderer/",
         "to": "",
         "from": {
           "glob": "assets/**/*",
@@ -361,7 +361,7 @@ module.exports = {
         }
       },
       {
-        "context": "E:\\work\\development\\ftp-webapp\\webapp\\src/",
+        "context": "E:\\work\\development\\ftp-webapp\\src\\renderer/",
         "to": "",
         "from": {
           "glob": "favicon.ico",
@@ -381,7 +381,7 @@ module.exports = {
     }),
     new NamedLazyChunksWebpackPlugin(),
     new HtmlWebpackPlugin({
-      "template": "./src\\index.html",
+      "template": "./src\\renderer\\index.html",
       "filename": "./index.html",
       "hash": false,
       "inject": true,
@@ -450,7 +450,7 @@ module.exports = {
         "environments\\environment.ts": "environments\\environment.ts"
       },
       "exclude": [],
-      "tsConfigPath": "src\\tsconfig.app.json",
+      "tsConfigPath": "src\\renderer\\tsconfig.app.json",
       "skipCodeGeneration": true
     })
   ],
@@ -469,14 +469,26 @@ module.exports = {
     "historyApiFallback": true
   },
   "externals": {
-    "assert": "require('assert')",
-    "child_process": "require('child_process')",
-    "cluster": "require('cluster')",
-    "crypto": "require('crypto')",
     "electron": "require('electron')",
+    "child_process": "require('child_process')",
+    "crypto": "require('crypto')",
+    "events": "require('events')",
     "fs": "require('fs')",
+    "http": "require('http')",
+    "https": "require('https')",
+    "assert": "require('assert')",
+    "dns": "require('dns')",
     "net": "require('net')",
-    "stream": "require('stream')"
+    "os": "require('os')",
+    "path": "require('path')",
+    "querystring": "require('querystring')",
+    "readline": "require('readline')",
+    "repl": "require('repl')",
+    "stream": "require('stream')",
+    "string_decoder": "require('string_decoder')",
+    "url": "require('url')",
+    "util": "require('util')",
+    "zlib": "require('zlib')"
   },
   "target": "electron-renderer"
 };
