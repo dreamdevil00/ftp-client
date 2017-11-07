@@ -22,6 +22,7 @@ export function UploaderFactory(credentials: Credentials, user?: UserInterface):
 export * from './enums';
 export * from './interfaces';
 export * from './ftp-client';
+export * from './uploader';
 
 
 
