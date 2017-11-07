@@ -33,14 +33,6 @@ export class IpcRendererService {
     this.ipcRenderer.send(message, args);
   }
 
-  dispatch(action: string, ...args) {
-    const handler = this.handler[action];
-    if (handler && typeof handler === 'function') {
-      handler(...args);
-    } else {
-      console.error('dispatch handler 缺失: ' + action);
-    }
-  }
 
   api(action: string, payload: any) {
     const reply = new Promise((resolve, reject) => {
