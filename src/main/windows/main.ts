@@ -3,9 +3,9 @@ import config from '../../app.config';
 
 import * as url from 'url';
 
-interface MainInterface {
-  win: Electron.BrowserWindow;
-  init: (options?) => void;
+export interface MainInterface {
+  win: Electron.BrowserWindow | null;
+  init: (options?: any) => void;
   send: (...args) => void;
   show: () => void;
   dispatch: (...args) => void;
