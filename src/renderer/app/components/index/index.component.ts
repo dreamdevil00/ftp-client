@@ -20,7 +20,7 @@ export class IndexComponent implements OnInit, OnDestroy {
 
   rowData: any[];
 
-  private selectedRow: any;
+  private selectedRow: { isFolder: boolean, path: string };
 
   constructor(
     private _ngZone: NgZone,
@@ -122,6 +122,25 @@ export class IndexComponent implements OnInit, OnDestroy {
 
 
   remove() {
+    const isDir = this.selectedRow.isFolder;
+    const path = this.selectedRow.path;
+    const successCb = () => {
+      if (isDir) {
+        this._ipcRenderer.api('removeDir', path)
+          .then(() => {
+            this.refresh();
+          });
+      } else {
+        this._ipcRenderer.api('removeFile', path)
+          .then(() => {
+            this.refresh();
+          });
+      }
+    };
+    this.ui.alertQuestion({
+      title: '是否确认删除?',
+      text: '请确认是否删除' + (isDir ? '文件夹 ' : '文件 ') + path,
+    }, successCb, () => {});
   }
 
   startAll() {
