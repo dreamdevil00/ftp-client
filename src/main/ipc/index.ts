@@ -2,6 +2,7 @@ import { ipcMain, app } from 'electron';
 import { isPromise } from '../lib/utils';
 import api from './api';
 import { log, error as logError } from '../logger';
+import { err2serializable } from '../lib/utils';
 
 export function init() {
   const ipc = ipcMain;
@@ -13,9 +14,11 @@ export function init() {
 
   ipc.on('api', (event: Electron.Event, actionName: string, payload: any) => {
     const reply = (err: Error | null, replyObj: any) => {
-      event.sender.send(`${actionName}reply`, err, replyObj);
+      // 由于 Error 对象 无法序列化, 在 序列化过程中 所有信息会丢失，这里转换下
+      const transformedError = err2serializable(err);
+      event.sender.send(`${actionName}reply`, transformedError, replyObj);
     };
-    log('received action:', actionName);
+    log(`received action: ${actionName}`, `payload: ${JSON.stringify(payload)}`);
     if ((api[actionName])) {
       if (isPromise(api[actionName])) {
         api[actionName](event, payload)
@@ -27,8 +30,8 @@ export function init() {
         });
       }
     } else {
-      const err = new Error('未知动作:' + actionName);
-      logError(err);
+      const err = new Error(`未知动作： ${actionName}`);
+      logError(err2serializable(err));
     }
   });
 }

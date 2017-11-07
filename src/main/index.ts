@@ -16,6 +16,8 @@ function init() {
   let isReady = false; // app ready, windows can be created
   (app as any).ipcReady = false; // main window has finished loading and IPC is ready
   (app as any).isQuitting = false;
+  (app as any).ftpClient = null; // ftpClient for manipulating files
+  (app as any).uploader = null; // ftpClient for uploading
 
   parallel({
     appReady: (cb) => app.on('ready', () => cb(null)),

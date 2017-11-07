@@ -20,9 +20,9 @@ export function isPromise<T>(
 }
 
 export function createPromiseCallback() {
-   let cb;
+   let cb: any;
    const promise = new Promise((resolve, reject) => {
-     cb = function(err, data) {
+     cb = function(err: Error, data?: any) {
        if (err) {
          return reject(err);
        }
@@ -31,4 +31,15 @@ export function createPromiseCallback() {
    });
    cb.promise = promise;
    return cb;
+}
+
+export function err2serializable(error: any) {
+  if ( typeof error !== 'undefined' && error !== null) {
+    error = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    };
+  }
+  return error;
 }
